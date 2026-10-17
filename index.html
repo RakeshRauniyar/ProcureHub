@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="ProcureHub supplier and purchase order management demo">
+  <title>ProcureHub | Procurement Management</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+<div class="app-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="#" aria-label="ProcureHub home">
+      <span class="brand-mark">P</span><span><b>ProcureHub</b><small>Procurement Portal</small></span>
+    </a>
+    <div class="nav-caption">WORKSPACE</div>
+    <nav class="nav-menu" aria-label="Main navigation">
+      <button class="nav-link active" data-page="dashboard"><span>▦</span> Dashboard</button>
+      <button class="nav-link" data-page="suppliers"><span>♙</span> Suppliers</button>
+      <button class="nav-link" data-page="products"><span>▤</span> Products</button>
+      <button class="nav-link" data-page="quotations"><span>⇄</span> Quotations</button>
+      <button class="nav-link" data-page="orders"><span>▣</span> Purchase Orders</button>
+      <button class="nav-link" data-page="reports"><span>▥</span> Reports</button>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="avatar">AD</div><div><b>Admin User</b><small>Procurement Manager</small></div>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation">☰</button>
+      <div><div class="eyebrow">PROCUREMENT MANAGEMENT</div><h1 id="page-title">Dashboard Overview</h1></div>
+      <div class="topbar-actions">
+        <span class="connection-pill"><i></i><span id="connection-text">Checking database…</span></span>
+        <button class="icon-button" id="notifications-button" title="Notifications" aria-label="Notifications">♧<span class="notification-dot" id="notification-dot"></span></button>
+        <button class="secondary-button small" id="refresh-button">↻ Refresh</button>
+      </div>
+    </header>
+
+    <section id="dashboard" class="page active-page">
+      <div class="hero">
+        <div><div class="eyebrow light">SUPPLIER & PURCHASE ORDER MANAGEMENT</div><h2>Manage purchasing with confidence.</h2><p>Organize suppliers, compare quotations and track orders in one place.</p></div>
+        <button class="primary-button" data-go="orders" id="hero-create-order">＋ Create Purchase Order</button>
+      </div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-label">Total Suppliers <span class="stat-icon purple">♙</span></div><h2 id="supplier-count">—</h2><p>Registered business partners</p></article>
+        <article class="stat-card"><div class="stat-label">Active Orders <span class="stat-icon blue">▣</span></div><h2 id="active-count">—</h2><p>Approved or in progress</p></article>
+        <article class="stat-card"><div class="stat-label">Pending Approval <span class="stat-icon orange">◷</span></div><h2 id="pending-count">—</h2><p>Orders awaiting review</p></article>
+        <article class="stat-card"><div class="stat-label">Purchase Value <span class="stat-icon green">₹</span></div><h2 id="purchase-value">₹0</h2><p>Total value of listed orders</p></article>
+      </div>
+      <div class="dashboard-grid">
+        <section class="panel chart-panel"><div class="panel-heading"><div><h3>Purchase Order Overview</h3><p>Order value by status</p></div><span class="subtle-tag">Live data</span></div><div class="chart-container"><canvas id="orders-chart" aria-label="Order value by status"></canvas></div></section>
+        <section class="panel"><div class="panel-heading"><div><h3>Order Status</h3><p>Current workload</p></div></div><div id="dashboard-status" class="status-summary compact"></div></section>
+      </div>
+      <section class="panel"><div class="panel-heading"><div><h3>Recent Purchase Orders</h3><p>Latest procurement activity</p></div><button class="text-button" data-go="orders">View all →</button></div>
+        <div class="table-wrap"><table><thead><tr><th>Order ID</th><th>Supplier</th><th>Order Date</th><th>Amount</th><th>Status</th></tr></thead><tbody id="recent-orders"></tbody></table></div>
+      </section>
+    </section>
+
+    <section id="suppliers" class="page">
+      <div class="section-heading"><div><h2>Supplier Directory</h2><p>Manage business partners and contact information.</p></div><button class="primary-button" id="add-supplier-btn">＋ Add Supplier</button></div>
+      <section class="panel"><div class="toolbar"><input id="supplier-search" type="search" placeholder="Search company, contact, email or category…"><span class="muted" id="supplier-total-label">0 suppliers</span></div>
+        <div class="table-wrap"><table><thead><tr><th>Company</th><th>Contact Person</th><th>Email</th><th>Phone</th><th>Category</th><th>Status</th><th>Actions</th></tr></thead><tbody id="supplier-table"></tbody></table></div>
+      </section>
+      <form id="supplier-form" class="panel form-panel" hidden>
+        <div class="form-title"><div><h3>Add Supplier</h3><p>Supplier details are saved to the database.</p></div><button type="button" class="icon-button close-form" data-close="supplier-form" aria-label="Close">×</button></div>
+        <div class="form-grid">
+          <label>Company Name *<input name="supplier_name" required maxlength="150" placeholder="e.g. ABC Industrial Supplies"></label>
+          <label>Contact Person *<input name="contact_person" required maxlength="120" placeholder="Full name"></label>
+          <label>Email Address *<input name="email" type="email" required maxlength="190" placeholder="name@company.com"></label>
+          <label>Phone Number *<input name="phone" type="tel" required maxlength="30" placeholder="Contact number"></label>
+          <label>Product Category *<input name="category" required maxlength="100" placeholder="e.g. Raw Materials"></label>
+          <label>Status<select name="status"><option>Active</option><option>Inactive</option></select></label>
+        </div><div class="form-actions"><button class="primary-button" type="submit">Save Supplier</button><button class="secondary-button" type="button" data-close="supplier-form">Cancel</button></div>
+      </form>
+    </section>
+
+    <section id="products" class="page">
+      <div class="section-heading"><div><h2>Product Catalogue</h2><p>Maintain the items and unit prices used in procurement.</p></div><button class="primary-button" id="add-product-btn">＋ Add Product</button></div>
+      <section class="panel"><div class="toolbar"><input id="product-search" type="search" placeholder="Search products or categories…"><span class="muted" id="product-total-label">0 products</span></div><div class="table-wrap"><table><thead><tr><th>Code</th><th>Product</th><th>Category</th><th>Unit Price</th><th>Stock</th><th>Actions</th></tr></thead><tbody id="product-table"></tbody></table></div></section>
+      <form id="product-form" class="panel form-panel" hidden><div class="form-title"><div><h3>Add Product</h3><p>Create an item for quotation and purchase-order records.</p></div><button type="button" class="icon-button close-form" data-close="product-form">×</button></div>
+        <div class="form-grid"><label>Product Code *<input name="product_code" required maxlength="40" placeholder="PRD-006"></label><label>Product Name *<input name="product_name" required maxlength="150"></label><label>Category *<input name="category" required maxlength="100"></label><label>Unit Price (₹) *<input name="unit_price" type="number" min="0.01" step="0.01" required></label><label>Stock Quantity *<input name="stock_quantity" type="number" min="0" step="1" value="0" required></label></div>
+        <div class="form-actions"><button class="primary-button" type="submit">Save Product</button><button class="secondary-button" type="button" data-close="product-form">Cancel</button></div>
+      </form>
+    </section>
+
+    <section id="quotations" class="page">
+      <div class="section-heading"><div><h2>Quotation Comparison</h2><p>Compare supplier offers before creating a purchase order.</p></div><button class="primary-button" id="add-quotation-btn">＋ Add Quotation</button></div>
+      <section class="panel"><div class="toolbar"><input id="quotation-search" type="search" placeholder="Search product or supplier…"><span class="muted" id="quotation-total-label">0 quotations</span></div><div class="table-wrap"><table><thead><tr><th>Product</th><th>Supplier</th><th>Quantity</th><th>Unit Price</th><th>Quoted Total</th><th>Quote Date</th><th>Actions</th></tr></thead><tbody id="quotation-table"></tbody></table></div><p class="note">Compare price, quality, delivery time and supplier reliability before selecting an offer.</p></section>
+      <form id="quotation-form" class="panel form-panel" hidden><div class="form-title"><div><h3>Add Quotation</h3><p>Record a supplier's offer for a product.</p></div><button type="button" class="icon-button close-form" data-close="quotation-form">×</button></div>
+        <div class="form-grid"><label>Supplier *<select name="supplier_id" id="quote-supplier" required></select></label><label>Product *<select name="product_id" id="quote-product" required></select></label><label>Quantity *<input name="quantity" type="number" min="1" step="1" value="1" required></label><label>Unit Price (₹) *<input name="unit_price" type="number" min="0.01" step="0.01" required></label><label>Quote Date *<input name="quote_date" type="date" required></label></div>
+        <div class="form-actions"><button class="primary-button" type="submit">Save Quotation</button><button class="secondary-button" type="button" data-close="quotation-form">Cancel</button></div>
+      </form>
+    </section>
+
+    <section id="orders" class="page">
+      <div class="section-heading"><div><h2>Purchase Orders</h2><p>Create, review and track procurement orders from one place.</p></div><button class="primary-button" id="add-order-btn">＋ New Order</button></div>
+      <form id="order-form" class="panel form-panel" hidden><div class="form-title"><div><h3>Create Purchase Order</h3><p>Order details will be stored in MySQL.</p></div><button type="button" class="icon-button close-form" data-close="order-form">×</button></div>
+        <div class="form-grid"><label>Supplier *<select name="supplier_id" id="order-supplier" required></select></label><label>Product *<select name="product_id" id="order-product" required></select></label><label>Quantity *<input name="quantity" type="number" min="1" step="1" value="1" required></label><label>Unit Price (₹) *<input name="unit_price" id="order-price" type="number" min="0.01" step="0.01" required></label><label>Status<select name="status"><option>Pending Approval</option><option>Approved</option><option>Ordered</option><option>Received</option><option>Cancelled</option></select></label><label>Expected Delivery<input name="expected_delivery" type="date"></label></div>
+        <p class="order-total">Estimated order total <strong id="order-total">₹0.00</strong></p><div class="form-actions"><button class="primary-button" type="submit">Create Order</button><button class="secondary-button" type="button" data-close="order-form">Cancel</button></div>
+      </form>
+      <section class="panel"><div class="toolbar"><input id="order-search" type="search" placeholder="Search order ID, supplier or product…"><select id="order-filter"><option value="">All statuses</option><option>Pending Approval</option><option>Approved</option><option>Ordered</option><option>Received</option><option>Cancelled</option></select><span class="muted" id="order-total-label">0 orders</span></div><div class="table-wrap"><table><thead><tr><th>Order ID</th><th>Supplier</th><th>Product</th><th>Date</th><th>Qty</th><th>Amount</th><th>Status</th><th>Actions</th></tr></thead><tbody id="order-table"></tbody></table></div></section>
+    </section>
+
+    <section id="reports" class="page">
+      <div class="section-heading"><div><h2>Procurement Reports</h2><p>Live summary of supplier, product and purchase activity.</p></div><div class="button-row"><button class="secondary-button" id="export-report">⇩ Export CSV</button><button class="primary-button" id="print-report">Print Report</button></div></div>
+      <div class="stats-grid">
+        <article class="stat-card"><div class="stat-label">Total Orders</div><h2 id="report-order-count">0</h2><p>All recorded orders</p></article>
+        <article class="stat-card"><div class="stat-label">Total Suppliers</div><h2 id="report-supplier-count">0</h2><p>Business partners</p></article>
+        <article class="stat-card"><div class="stat-label">Total Purchase Value</div><h2 id="report-value">₹0</h2><p>All order totals</p></article>
+        <article class="stat-card"><div class="stat-label">Received Orders</div><h2 id="report-received">0</h2><p>Completed deliveries</p></article>
+      </div>
+      <div class="dashboard-grid"><section class="panel"><div class="panel-heading"><div><h3>Order Status Summary</h3><p>Share of orders in each stage</p></div></div><div id="status-summary" class="status-summary"></div></section><section class="panel"><div class="panel-heading"><div><h3>Report Notes</h3><p>Interpreting procurement data</p></div></div><ul class="report-notes"><li>Use quotations to compare supplier prices before approval.</li><li>Update purchase-order status as items progress through delivery.</li><li>Export CSV for spreadsheet review or assessment evidence.</li><li>Data in this report comes from the local ProcureHub database.</li></ul></section></div>
+    </section>
+
+    <div class="toast-region" id="toast-region" aria-live="polite"></div>
+    <div class="notification-popover" id="notification-popover" hidden><div class="panel-heading"><h3>Notifications</h3><button class="icon-button" id="close-notifications">×</button></div><div id="notification-list"></div></div>
+    <footer><span>ProcureHub · Supplier & Purchase Order Management System</span><span>Web Technology Lab · Review 02/03</span></footer>
+  </main>
+</div>
+<script src="script.js"></script>
+</body>
+</html>

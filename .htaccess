@@ -1,0 +1,4 @@
+Options -Indexes
+<FilesMatch "^(database\.sql|README_SETUP\.md|REVIEW03_REPORT_AND_VIVA\.md|script-backup\.js)$">
+  Require all denied
+</FilesMatch>

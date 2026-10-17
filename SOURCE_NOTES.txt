@@ -1,0 +1,3 @@
+ProcureHub Review 03 package.
+The original submitted UI was rebuilt into a consistent database-backed version while retaining the light/blue procurement dashboard concept.
+Import database.sql only on first setup; it drops/recreates project tables.

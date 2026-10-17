@@ -1,0 +1,4 @@
+# Local environment and backups
+*.log
+.DS_Store
+Thumbs.db
